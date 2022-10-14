@@ -3,75 +3,124 @@ package rest.ressources;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import rest.entities.Logement;
 import rest.entities.Logement.Type;
+import tn.esprit.business.LogementBusiness;
 
-
+@Path("logements")
 public class GestionLogement {
 private List<Logement> logements;
 
+private static LogementBusiness lgB = new LogementBusiness();
 	
-	public GestionLogement() {
-		logements=new ArrayList<Logement>();
-		logements.add(new Logement(1,"27, Rue des roses", "El ghazela","Ariana",Type.Studio,"cuisine equipee",300f));
-		logements.add(new Logement(5,"58, Rue des roses", "El ghazela","Ariana",Type.EtageVilla,"cuisine equipee",450f));
-		logements.add(new Logement(2,"201, R�sidence Omrane4", "Riadh El Andalous","Ariana",Type.Appartement,"chauffage central, ascenseur, climatisation",700f));
-		logements.add(new Logement(3,"540, R�sidence Les Tulipes", "El Aouina","Ariana",Type.Appartement,"S+2, chauffage central, ascenseur, climatisation",500f));
-		logements.add(new Logement(4,"78, Rue des Oranges", "Bardo","Tunis",Type.EtageVilla,"chauffage central, ascenseur, climatisation",400f));
+
+@GET
+@Produces(MediaType.APPLICATION_JSON)
+public Response getListLogements() {
+	
+	if(lgB.getLogements().size()!=0)
+	{
+
+		return Response.status(Status.FOUND).entity(lgB.getLogements()).build();}
+	return Response.status(Status.NOT_FOUND).entity("liste est vide").build();
 	}
 
-	public List<Logement> getLogements() {
-		return logements;
+@GET
+@Produces(MediaType.APPLICATION_JSON)
+@Path("getListByDelegation")
+public Response getLogementsbyDelegation(@QueryParam(value="delegation") String delegation) {
+	if(lgB.getLogementsByDeleguation(delegation).size()!=0)
+	{
+		return Response.status(Status.FOUND).entity(lgB.getLogementsByDeleguation(delegation)).build();}
+	return Response.status(Status.NOT_FOUND).entity("liste vide").build();
+
 	}
 
-	public void setLogements(List<Logement> logements) {
-		this.logements = logements;
+
+
+
+@GET
+@Produces(MediaType.APPLICATION_JSON)
+@Path("getListByGouvernorat")
+public Response getLogementsbyGouvernorat(@QueryParam(value="gouvernorat") String gouvernorat) {
+	if(lgB.getLogementsByGouvernorat(gouvernorat).size()!=0)
+	{
+		return Response.status(Status.FOUND).entity(lgB.getLogementsByGouvernorat(gouvernorat)).build();}
+	return Response.status(Status.NOT_FOUND).entity("liste vide").build();
+
 	}
-	
-	public Logement getLogementsByReference(int reference){
-		
-		for (Logement l:logements){
-			if(l.getReference()==reference)
-				return l;
-		}
-		return null;
+
+
+
+
+
+
+@GET
+@Produces(MediaType.APPLICATION_JSON)
+@Path("getListByType")
+public Response getLogementsbyType(@QueryParam(value="type") Logement.Type type ) {
+	if(lgB.getLogementsByType(type).size()!=0)
+	{
+		return Response.status(Status.FOUND).entity(lgB.getLogementsByType(type)).build();}
+	return Response.status(Status.NOT_FOUND).entity("liste vide").build();
+
 	}
-	
-	public List<Logement> getLogementsByDeleguation(String deleguation){
-		List<Logement> liste=new ArrayList<Logement>();
-		for (Logement l:logements){
-			if(l.getDeleguation().equals(deleguation))
-				liste.add(l);
-		}
-		return liste;
+
+
+
+@GET
+@Produces(MediaType.APPLICATION_JSON)
+@Path("getListByPrice")
+public Response getLogementsbyPrice(@QueryParam(value="prix") float prix ) {
+	if(lgB.getLogementsByPrix(prix).size()!=0)
+	{
+		return Response.status(Status.FOUND).entity(lgB.getLogementsByPrix(prix)).build();}
+	return Response.status(Status.NOT_FOUND).entity("liste vide").build();
+
 	}
-	
-	public List<Logement> getLogementsByGouvernorat(String gouvernorat){
-		List<Logement> liste=new ArrayList<Logement>();
-		for (Logement l:logements){
-			if(l.getGouvernorat().equals(gouvernorat))
-				liste.add(l);
-		}
-		return liste;
+
+
+@GET
+@Produces(MediaType.APPLICATION_JSON)
+@Path("getLogementByRef")
+public Response getLogementsbyRef(@QueryParam(value="reference") int ref ) {
+	if(lgB.getLogementsByReference(ref)!=null)
+	{
+		return Response.status(Status.FOUND).entity(lgB.getLogementsByReference(ref)).build();}
+	return Response.status(Status.NOT_FOUND).entity("inexistant").build();
+
 	}
-	
-	public List<Logement> getLogementsByType(Type type){
-		List<Logement> liste=new ArrayList<Logement>();
-		for (Logement l:logements){
-			if(l.getType().equals(type))
-				liste.add(l);
-		}
-		return liste;
-	}
-	
-	public List<Logement> getLogementsByPrix(float prix){
-		List<Logement> liste=new ArrayList<Logement>();
-		for (Logement l:logements){
-			if(l.getPrix()<=prix)
-				liste.add(l);
-		}
-		return liste;
-	}
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
